@@ -3,18 +3,17 @@ resource "docker_image" "postgres" {
 }
 
 resource "docker_container" "postgres_db" {
-  name  = "dbre-postgres"
-
+  name  = var.container_name
   image = docker_image.postgres.image_id
 
   ports {
-    internal = 5432
-    external = 5432
+    internal = var.postgres_port
+    external = var.postgres_port
   }
 
   env = [
-    "POSTGRES_USER=admin",
-    "POSTGRES_PASSWORD=password",
-    "POSTGRES_DB=dbre_lab"
+    "POSTGRES_USER=${var.postgres_user}",
+    "POSTGRES_PASSWORD=${var.postgres_password}",
+    "POSTGRES_DB=${var.postgres_db}"
   ]
 }
