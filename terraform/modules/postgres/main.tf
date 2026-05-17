@@ -21,6 +21,14 @@ resource "docker_container" "postgres_primary" {
     "POSTGRES_DB=${var.postgres_db}"
   ]
 
+  command = [
+    "postgres",
+    "-c",
+    "config_file=/etc/postgresql/postgresql.conf",
+    "-c",
+    "hba_file=/etc/postgresql/pg_hba.conf"
+  ]
+
   ports {
     internal = 5432
     external = var.primary_port
@@ -47,17 +55,29 @@ resource "docker_container" "postgres_primary" {
   networks_advanced {
     name = var.network_name
   }
+  volumes {
+    host_path      = abspath("${path.root}/../../../scripts/postgres/config/postgresql.conf")
+    container_path = "/etc/postgresql/postgresql.conf"
+  }
+
+  volumes {
+    host_path      = abspath("${path.root}/../../../scripts/postgres/config/pg_hba.conf")
+    container_path = "/etc/postgresql/pg_hba.conf"
+  }
 }
 
 resource "docker_container" "postgres_replica" {
   name     = "${var.environment}-postgres-replica"
   hostname = "postgres-replica"
-  image    = docker_image.postgres.image_id
+
+  image = docker_image.postgres.image_id
+
+  depends_on = [
+    docker_container.postgres_primary
+  ]
 
   env = [
-    "POSTGRES_USER=${var.postgres_user}",
-    "POSTGRES_PASSWORD=${var.postgres_password}",
-    "POSTGRES_DB=${var.postgres_db}"
+    "POSTGRES_PASSWORD=${var.postgres_password}"
   ]
 
   ports {
@@ -73,4 +93,29 @@ resource "docker_container" "postgres_replica" {
   networks_advanced {
     name = var.network_name
   }
+
+  command = [
+    "bash",
+    "-c",
+    <<EOT
+  sleep 40
+
+  rm -rf /var/lib/postgresql/data/*
+
+  PGPASSWORD=replica123 pg_basebackup \
+  -h postgres-primary \
+  -D /var/lib/postgresql/data \
+  -U replicator \
+  -Fp \
+  -X stream \
+  -P \
+  -R
+
+  chown -R postgres:postgres /var/lib/postgresql/data
+  chmod 0700 /var/lib/postgresql/data
+
+  su postgres -c "postgres"
+ EOT
+ ]
+
 }
