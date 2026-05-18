@@ -12,3 +12,5 @@ replica_port = 5433
 pgadmin_email    = "admin@dbre.com"
 pgadmin_password = "admin123"
 pgadmin_port     = 8080
+
+pgbouncer_port = 6432

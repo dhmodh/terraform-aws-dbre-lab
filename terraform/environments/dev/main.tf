@@ -17,6 +17,17 @@ module "postgres" {
   replica_port      = var.replica_port
 }
 
+module "pgbouncer" {
+  source = "../../modules/pgbouncer"
+
+  environment       = var.environment
+  network_name      = module.networking.network_name
+  postgres_user     = var.postgres_user
+  postgres_password = var.postgres_password
+  postgres_db       = var.postgres_db
+  pgbouncer_port    = var.pgbouncer_port
+}
+
 module "pgadmin" {
   source = "../../modules/pgadmin"
 

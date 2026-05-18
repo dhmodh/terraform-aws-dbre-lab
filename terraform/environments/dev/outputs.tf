@@ -13,3 +13,7 @@ output "postgres_replica" {
 output "pgadmin_url" {
   value = module.pgadmin.pgadmin_url
 }
+
+output "pgbouncer" {
+  value = module.pgbouncer.pgbouncer_name
+}

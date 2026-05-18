@@ -14,3 +14,6 @@ variable "pgadmin_password" {
   sensitive = true
 }
 variable "pgadmin_port" { type = number }
+variable "pgbouncer_port" {
+  type = number
+}
