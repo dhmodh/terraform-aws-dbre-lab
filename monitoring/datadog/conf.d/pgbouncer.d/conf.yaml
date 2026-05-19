@@ -1,0 +1,7 @@
+init_config:
+
+instances:
+  - host: dev-pgbouncer
+    port: 5432
+    username: dishant
+    password: dishant123

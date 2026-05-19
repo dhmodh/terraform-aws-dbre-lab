@@ -1,0 +1,17 @@
+init_config:
+
+instances:
+  - host: postgres-primary
+    port: 5432
+    username: dishant
+    password: dishant123
+    dbname: healthcare_dbre
+
+    relations:
+      - relation_name: patients
+      - relation_name: appointments
+      - relation_name: claims
+
+    collect_function_metrics: true
+    collect_count_metrics: true
+    collect_database_size_metrics: true
