@@ -28,6 +28,15 @@ module "pgbouncer" {
   pgbouncer_port    = var.pgbouncer_port
 }
 
+module "datadog_agent" {
+  source = "../../modules/datadog-agent"
+
+  environment     = var.environment
+  network_name    = module.networking.network_name
+  datadog_api_key = var.datadog_api_key
+  datadog_site    = var.datadog_site
+}
+
 module "pgadmin" {
   source = "../../modules/pgadmin"
 

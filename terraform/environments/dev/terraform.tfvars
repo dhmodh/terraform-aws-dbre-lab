@@ -14,3 +14,7 @@ pgadmin_password = "admin123"
 pgadmin_port     = 8080
 
 pgbouncer_port = 6432
+
+datadog_api_key = "884e1f020e7e84f81ffb20d74c92a99b"
+
+datadog_site = "datadoghq.com"

@@ -17,3 +17,12 @@ variable "pgadmin_port" { type = number }
 variable "pgbouncer_port" {
   type = number
 }
+
+variable "datadog_api_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "datadog_site" {
+  type = string
+}
